@@ -1,6 +1,7 @@
 package br.ds.senac.gamesfx;
 
 import br.ds.senac.gamesfx.ui.home.PainelHome;
+import br.ds.senac.gamesfx.ui.jogos.PainelJogos;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,18 +12,18 @@ import javafx.stage.Stage;
 
 
 public class TelaPrincipal extends Application {
-    private  static final  String COR_PADRAO = "#6E6A5A;"+"-fx-text-fill: black;"+
-            "-fx-border-color: #C9A227;" +
+    private  static final  String COR_PADRAO = "#778899;"+"-fx-text-fill: black;"+
+            "-fx-border-color: #000000;" +
             "-fx-border-width: 2px;" +
-            "-fx-border-radius: 5;" +
-            "-fx-background-radius: 5;"+
+            "-fx-border-radius: 7;" +
+            "-fx-background-radius: 6;"+
             "-fx-cursor: hand";
 
-    private  static final  String COR_HOVER = "#C2B98A;"+"-fx-text-fill: black;"+
-            "-fx-border-color: #C9A227;" +
+    private  static final  String COR_HOVER = "#696969;"+"-fx-text-fill: black;"+
+            "-fx-border-color: #000000;" +
             "-fx-border-width: 2px;" +
-            "-fx-border-radius: 5;" +
-            "-fx-background-radius: 5;"+
+            "-fx-border-radius: 7" +
+            "-fx-background-radius: 6;"+
             "-fx-cursor: hand";
 
 
@@ -39,12 +40,16 @@ public class TelaPrincipal extends Application {
 
         //===========estilos da pagina=================
 
-        painelLateral.setStyle("-fx-background-color: #4A4C4F;"+  "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.3, 2, 0)");
+        painelLateral.setStyle("-fx-background-color: #363636;"+  "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.3, 2, 0)");
         raiz.setStyle("-fx-background-color: #2F3336;");
 
         // ================Botões=========================
 
         Button btnJogos = criarBotaoMenu("Jogos");
+        btnJogos.setOnAction(click -> {
+            PainelJogos painelJogos = new PainelJogos();
+            raiz.setCenter(painelJogos.criarPainelJogos());
+        });
 
         Button btnPlataformas = criarBotaoMenu("Plataformas");
 
@@ -52,6 +57,10 @@ public class TelaPrincipal extends Application {
 
         Button btnHome = criarBotaoMenu("Home");
         aplicarEfeitoHover(btnJogos,btnHome,btnEstudios,btnPlataformas);
+        btnHome.setOnAction(click -> {
+            PainelHome painelHome = new PainelHome();
+            raiz.setCenter(painelHome.criarPainelHome());
+        });
         //======================Vincular botão ao painel lateral=========================
 
         painelLateral.getChildren().addAll(btnHome,btnJogos,btnPlataformas,btnEstudios);
@@ -64,7 +73,7 @@ public class TelaPrincipal extends Application {
 
         Scene cena = new Scene(raiz,1200,800);
 //        stage.setResizable(false);
-        stage.setTitle("Sistema de Gestão de Jogos V1.0");
+        stage.setTitle("Sistema de Gestão de Platinas de Jogos V1.0");
         stage.setMaximized(true);
 
 
