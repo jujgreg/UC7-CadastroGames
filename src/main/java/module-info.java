@@ -5,5 +5,6 @@ module br.ds.senac.gamesfx {
     requires org.controlsfx.controls;
 
     opens br.ds.senac.gamesfx to javafx.fxml;
+    opens br.ds.senac.gamesfx.model to javafx.base;
     exports br.ds.senac.gamesfx;
 }
