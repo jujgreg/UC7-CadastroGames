@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -29,6 +30,10 @@ public class TelaPrincipal extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        Image Iconetela = new Image(getClass().getResourceAsStream("/imagens/salve-.png"));
+                stage.getIcons().add(Iconetela);
+
 
         BorderPane raiz = new BorderPane();
 
@@ -75,6 +80,7 @@ public class TelaPrincipal extends Application {
 //        stage.setResizable(false);
         stage.setTitle("Sistema de Gestão de Platinas de Jogos V1.0");
         stage.setMaximized(true);
+
 
 
         //=====================Atribuindo a cena ao stage(palco)=====================

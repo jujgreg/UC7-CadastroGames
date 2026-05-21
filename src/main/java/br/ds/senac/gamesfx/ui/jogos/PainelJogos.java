@@ -40,8 +40,15 @@ public class PainelJogos {
         //tabela de jogos
         TableView<Jogo> tblJogos = new TableView<>();
 
+        tblJogos.setStyle(
+                "-fx-background-color: #696969;"
+        );
 
         VBox.setVgrow(tblJogos, Priority.ALWAYS);
+
+        //estilo da tabela
+
+
 
 
         // BOTOES
@@ -53,18 +60,18 @@ public class PainelJogos {
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaId.setResizable(false);
         colunaId.setPrefWidth(50);
-        colunaId.setStyle("-fx-text-fill: #000000;");
+        colunaId.setStyle("-fx-text-fill: #000000; -fx-background-color: #696969; -fx-border-color: #444;");
 
         TableColumn<Jogo, String> colunaTitulo = new TableColumn<>("TITULO");
         colunaTitulo.setCellValueFactory(new PropertyValueFactory<>("titulo"));
         colunaTitulo.setPrefWidth(400);
-        colunaTitulo.setStyle("-fx-text-fill: #000000;");
+        colunaTitulo.setStyle("-fx-text-fill: #000000; -fx-background-color: #696969; -fx-border-color: #444;");
 
 
         TableColumn<Jogo, String> colunaPlataforma = new TableColumn<>("PLATAFORMA");
         colunaPlataforma.setCellValueFactory(new PropertyValueFactory<>("plataforma"));
         colunaPlataforma.setPrefWidth(400);
-        colunaPlataforma.setStyle("-fx-text-fill: #000000;");
+        colunaPlataforma.setStyle("-fx-text-fill: #000000; -fx-background-color: #696969; -fx-border-color: #444;");
 
        TableColumn<Jogo, Boolean> colunaPlatinado = new TableColumn<>("PLATINADO");
         colunaPlatinado.setCellValueFactory(new PropertyValueFactory<>("platinado"));
