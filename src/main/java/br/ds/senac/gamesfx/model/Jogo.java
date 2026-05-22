@@ -19,6 +19,10 @@ public class Jogo {
         this.plataforma = plataforma;
     }
 
+    public Jogo() {
+
+    }
+
 
     public int getId() {
         return id;

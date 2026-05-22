@@ -1,5 +1,6 @@
 package br.ds.senac.gamesfx.ui.jogos;
 
+import br.ds.senac.gamesfx.data.repository.JogoRepository;
 import br.ds.senac.gamesfx.model.Jogo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,18 +17,34 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.time.LocalDate;
 
 
 public class TelaJogo {
 
-    private TextField tfId;
-    private TextField tfTitulo;
-    private TextField tfValor;
-    private ComboBox<String> comboPlataforma;
-    private ComboBox<String> comboEstudio;
-    private DatePicker dpDataLancamento;
-    private CheckBox cbFinalizado;
+    private TextField tfId = new TextField();
+    private TextField tfTitulo = new TextField();
+    private TextField tfValor = new TextField();
+    private ComboBox<String> comboPlataforma =  new ComboBox<>();
+    private ComboBox<String> comboEstudio =new ComboBox<>();
+    private DatePicker dpDataLancamento = new DatePicker();
+    private CheckBox cbFinalizado = new CheckBox();
+
+
+    public TelaJogo(Jogo jogo){
+
+        tfId.setText(String.valueOf(jogo.getId()));
+        tfTitulo.setText(jogo.getTitulo());
+        tfValor.setText(String.valueOf(jogo.getPreco()));
+        comboPlataforma.setValue(jogo.getPlataforma());
+        comboEstudio.setValue(jogo.getEstudio());
+        dpDataLancamento.setValue(jogo.getDataLancamento());
+        cbFinalizado.setSelected(jogo.isPlatinado());
+
+    }
+
+    public TelaJogo(){}
 
 
     public void criarTela(Stage stagePai){
@@ -43,7 +60,7 @@ public class TelaJogo {
         BorderPane raiz = new BorderPane();
         raiz.setTop(criarPainelTitulo());
         raiz.setCenter(criarFormulario());
-        raiz.setBottom(criarRodape());
+        raiz.setBottom(criarRodape(stage));
         Scene cena = new Scene(raiz,500,550);
 
 
@@ -110,26 +127,22 @@ public class TelaJogo {
         //Criar os componentes para a grid
 
         Label lblid = new Label("ID: ");
-        tfId = new TextField();
         tfId.setEditable(false);
         tfId.setDisable(true);
 
         Label lblTitulo = new Label("Título: ");
-        tfTitulo = new TextField();
         tfTitulo.setPromptText("Ex. Minecraft");
 
         Label lblPlataformas = new Label("Plataforma: ");
-        comboPlataforma = new ComboBox<>(plataformas);
+        comboPlataforma.setItems(plataformas);
 
         Label lblEstudios = new Label("Estudio: ");
-        comboEstudio = new ComboBox<>(estudios);
+        comboEstudio.setItems(estudios);
 
         Label lblValor = new Label("Valor: ");
-        tfValor = new TextField();
         tfValor.setPromptText("Ex. 9,99");
 
         Label lblLancamento = new Label("Data de Lançamento: ");
-        dpDataLancamento = new DatePicker(LocalDate.now());
 
         cbFinalizado = new CheckBox("Finalizado?");
 
@@ -144,8 +157,9 @@ public class TelaJogo {
         gridFormulario.add(comboEstudio,1,3);
         gridFormulario.add(lblValor,0,4);
         gridFormulario.add(tfValor,1,4);
-        gridFormulario.add(lblLancamento,0,4);
-        gridFormulario.add(dpDataLancamento,1,4);
+        gridFormulario.add(lblLancamento,0,5);
+        gridFormulario.add(dpDataLancamento,1,5);
+        gridFormulario.add(cbFinalizado,0, 6);
 //====================================================================================================
 
 
@@ -174,21 +188,60 @@ public class TelaJogo {
 
         return botao;
     }
-    private HBox criarRodape(){
+    private HBox criarRodape(Stage stage) {
         HBox rodape = new HBox();
 
-        rodape.setPadding(new Insets (10,5,10,10));
+        rodape.setPadding(new Insets(10, 5, 10, 10));
         rodape.setStyle("-fx-background-color:#6B6D70 ; ");
 
-        Button btnSalvar = criarBotao("salvar","/imagens/botao-de-download.png");
+        Button btnSalvar = criarBotao("salvar", "/imagens/save-.png");
         btnSalvar.setTooltip(new Tooltip("Salvar"));
-        Button btnApagar = criarBotao("Apagar","/imagens/risonho.png");
+        Button btnApagar = criarBotao("Apagar", "/imagens/risonho.png");
         btnApagar.setTooltip(new Tooltip("Apagar"));
         rodape.setAlignment(Pos.BASELINE_RIGHT);
-        rodape.getChildren().addAll(btnApagar,btnSalvar);
+
         rodape.setSpacing(10);
+        btnSalvar.setTooltip(new Tooltip("Salvar dados do jogo"));
+
+        btnSalvar.setOnAction(evento -> {
+            Jogo jogo = new Jogo();
+            jogo.setTitulo(tfTitulo.getText());
+            jogo.setPlataforma(comboPlataforma.getValue());
+            jogo.setEstudio(comboEstudio.getValue());
+            jogo.setDataLancamento(dpDataLancamento.getValue());
+            jogo.setCategoria("Jogo");
+            jogo.setPlatinado(cbFinalizado.isSelected());
+            jogo.setPreco(Double.parseDouble(tfValor.getText()));
+
+            // Criar o repositório para enviar o jogo
+
+            JogoRepository repository = new JogoRepository();
+            if (tfId.getText().equals("")){
+                repository.salvar(jogo);
+            }else{
+                jogo.setId(Integer.parseInt(tfId.getText()));
+                repository.editar(jogo);
+            }
+            repository.salvar(jogo);
+//            JOptionPane.showMessageDialog(
+//                    null,
+//                    "Jogo cadastrado com sucesso!",
+//                    "Erro",
+//                    JOptionPane.ERROR_MESSAGE
+//            );
+            int resposta = JOptionPane.showConfirmDialog(
+                    null,
+                    "Jogo cadastrado com sucesso!\nDeseja cadastrar outro jogo?",
+                    "cadastro",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (resposta != 0) {
+                stage.close();
+            }
+
+        });
 
         return rodape;
     }
-}
+    }
 

@@ -5,6 +5,7 @@ module br.ds.senac.gamesfx {
     requires org.controlsfx.controls;
     requires jdk.jdi;
     requires java.sql;
+    requires java.desktop;
 
     opens br.ds.senac.gamesfx to javafx.fxml;
     opens br.ds.senac.gamesfx.model to javafx.base;
