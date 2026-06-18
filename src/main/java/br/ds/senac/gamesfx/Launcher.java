@@ -8,16 +8,7 @@ import java.time.LocalDate;
 
 public class Launcher {
     public static void main(String[] args) {
-        //Application.launch(TelaPrincipal.class, args);
-
-        Jogo jogo = new Jogo(0, "teste", "plata");
-        jogo.setEstudio("test");
-        jogo.setCategoria("test");
-        jogo.setPreco(999.99);
-        jogo.setDataLancamento(LocalDate.now());
-        jogo.setPlatinado(true);
-        JogoRepository repository = new JogoRepository();
-        repository.salvar(jogo);
+        Application.launch(TelaPrincipal.class, args);
 
     }
 }

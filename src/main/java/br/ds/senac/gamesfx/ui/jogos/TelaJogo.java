@@ -1,7 +1,11 @@
 package br.ds.senac.gamesfx.ui.jogos;
 
+import br.ds.senac.gamesfx.data.repository.EstudioRepository;
 import br.ds.senac.gamesfx.data.repository.JogoRepository;
+import br.ds.senac.gamesfx.data.repository.PlataformaRepository;
+import br.ds.senac.gamesfx.model.Estudio;
 import br.ds.senac.gamesfx.model.Jogo;
+import br.ds.senac.gamesfx.model.Plataforma;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,6 +23,7 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.Optional;
 
 
 public class TelaJogo {
@@ -26,10 +31,12 @@ public class TelaJogo {
     private TextField tfId = new TextField();
     private TextField tfTitulo = new TextField();
     private TextField tfValor = new TextField();
-    private ComboBox<String> comboPlataforma =  new ComboBox<>();
-    private ComboBox<String> comboEstudio =new ComboBox<>();
+    private ComboBox<Plataforma> comboPlataforma =  new ComboBox<>();
+    private ComboBox<Estudio> comboEstudio =new ComboBox<>();
     private DatePicker dpDataLancamento = new DatePicker();
     private CheckBox cbFinalizado = new CheckBox();
+    EstudioRepository repository = new EstudioRepository();
+    PlataformaRepository repositoryP = new PlataformaRepository();
 
 
     public TelaJogo(Jogo jogo){
@@ -37,8 +44,8 @@ public class TelaJogo {
         tfId.setText(String.valueOf(jogo.getId()));
         tfTitulo.setText(jogo.getTitulo());
         tfValor.setText(String.valueOf(jogo.getPreco()));
-        comboPlataforma.setValue(jogo.getPlataforma());
-        comboEstudio.setValue(jogo.getEstudio());
+        comboPlataforma.setItems(repositoryP.getPlataforma());
+        comboEstudio.setItems(repository.getEstudio());
         dpDataLancamento.setValue(jogo.getDataLancamento());
         cbFinalizado.setSelected(jogo.isPlatinado());
 
@@ -54,27 +61,29 @@ public class TelaJogo {
 
 
         stage.setMaxWidth(500);
-        stage.setHeight(500);
+      //  stage.setHeight(800);
         stage.setTitle("Cadastro de Jogo");
 
         BorderPane raiz = new BorderPane();
+
         raiz.setTop(criarPainelTitulo());
         raiz.setCenter(criarFormulario());
         raiz.setBottom(criarRodape(stage));
-        Scene cena = new Scene(raiz,500,550);
 
 
-        stage.setHeight(550);
-        stage.setWidth(500);
+
+        Scene cena = new Scene(raiz);
+
+
+
+
+
         stage.setResizable(false);
         stage.setScene(cena);
 
 
 
-
         stage.showAndWait();
-
-
 
 
 
@@ -89,7 +98,7 @@ public class TelaJogo {
 
         painelTitulo.setPadding(new Insets (20,0,20,20));
         painelTitulo.setStyle("-fx-background-color:#363636; ");
-//        painelTitulo.set
+
         painelTitulo.setAlignment(Pos.CENTER_LEFT);
 
 
@@ -107,14 +116,8 @@ public class TelaJogo {
     private VBox criarFormulario(){
 
 
-        ObservableList<String> plataformas = FXCollections
-                .observableArrayList(
-                        "Computador", "PlayStation 1", "PlayStation 2", "PlayStation 3", "PlayStation 4", "PlayStation 5", "Xbox", "Xbox 360", "Xbox One", "Xbox Series X", "Xbox Series S", "NES", "SNES", "Nintendo 64", "GameCube", "Wii", "Wii U", "Nintendo Switch", "Sega Master System", "Sega Mega Drive", "Sega Saturn", "Sega Dreamcast"
-                );
-        ObservableList<String> estudios = FXCollections
-                .observableArrayList(
-                        "Rockstar Games", "Naughty Dog", "Ubisoft", "Electronic Arts", "Capcom", "Square Enix", "Bethesda", "Nintendo", "Insomniac Games", "FromSoftware"
-                );
+
+
 
         VBox formulario = new VBox();
         formulario.setPadding(new Insets(10));
@@ -134,10 +137,10 @@ public class TelaJogo {
         tfTitulo.setPromptText("Ex. Minecraft");
 
         Label lblPlataformas = new Label("Plataforma: ");
-        comboPlataforma.setItems(plataformas);
+        comboPlataforma.setItems(repositoryP.getPlataforma());
 
         Label lblEstudios = new Label("Estudio: ");
-        comboEstudio.setItems(estudios);
+        comboEstudio.setItems(repository.getEstudio());
 
         Label lblValor = new Label("Valor: ");
         tfValor.setPromptText("Ex. 9,99");
@@ -184,8 +187,6 @@ public class TelaJogo {
         botao.setPrefHeight(40);
         botao.setPrefWidth(120);
         botao.setStyle(" -fx-background-color: #3B4045; -fx-text-fill: #98FB98;-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #98FB98; -fx-font-weight: bold; -fx-cursor: hand; -fx-padding: 8 14;");
-
-
         return botao;
     }
     private HBox criarRodape(Stage stage) {
@@ -194,10 +195,11 @@ public class TelaJogo {
         rodape.setPadding(new Insets(10, 5, 10, 10));
         rodape.setStyle("-fx-background-color:#6B6D70 ; ");
 
-        Button btnSalvar = criarBotao("salvar", "/imagens/save-.png");
+        Button btnSalvar = criarBotao("salvar", "/imagens/salve-.png");
         btnSalvar.setTooltip(new Tooltip("Salvar"));
         Button btnApagar = criarBotao("Apagar", "/imagens/risonho.png");
         btnApagar.setTooltip(new Tooltip("Apagar"));
+
         rodape.setAlignment(Pos.BASELINE_RIGHT);
 
         rodape.setSpacing(10);
@@ -206,42 +208,73 @@ public class TelaJogo {
         btnSalvar.setOnAction(evento -> {
             Jogo jogo = new Jogo();
             jogo.setTitulo(tfTitulo.getText());
-            jogo.setPlataforma(comboPlataforma.getValue());
-            jogo.setEstudio(comboEstudio.getValue());
+            jogo.setPlataforma(comboPlataforma.getValue().getNomePlataforma());
+            jogo.setEstudio(comboEstudio.getValue().getNomeStudio());
             jogo.setDataLancamento(dpDataLancamento.getValue());
             jogo.setCategoria("Jogo");
             jogo.setPlatinado(cbFinalizado.isSelected());
-            jogo.setPreco(Double.parseDouble(tfValor.getText()));
+
+            try {
+                jogo.setPreco(Double.parseDouble(tfValor.getText().replace(",", ".")));
+            }catch (NumberFormatException e) {
+
+                Alert valorIncorreto = new Alert(Alert.AlertType.ERROR);
+                valorIncorreto.setTitle("valor incorreto");
+                valorIncorreto.setHeaderText("O valor deve ter apenas números!\nUltilize ponto ou virgula como centavos");
+                valorIncorreto.showAndWait();
+                tfValor.requestFocus();
+                return;
+            }
 
             // Criar o repositório para enviar o jogo
 
             JogoRepository repository = new JogoRepository();
             if (tfId.getText().equals("")){
                 repository.salvar(jogo);
+
+               Alert mensagemSalvar = new Alert(Alert.AlertType.CONFIRMATION);
+               mensagemSalvar.setTitle("cadastro de jogos");
+               mensagemSalvar.setHeaderText("o jogo foi gravado com sucesso");
+               mensagemSalvar.setContentText("deseja cadastrar outro jogo?");
+
+                Optional<ButtonType> escolhaCadastra = mensagemSalvar.showAndWait();
+
+                if(escolhaCadastra.get() == ButtonType.OK){
+                    limparCampos();
+
+                }else {
+                    stage.close();
+                }
+
+
             }else{
                 jogo.setId(Integer.parseInt(tfId.getText()));
                 repository.editar(jogo);
-            }
-            repository.salvar(jogo);
-//            JOptionPane.showMessageDialog(
-//                    null,
-//                    "Jogo cadastrado com sucesso!",
-//                    "Erro",
-//                    JOptionPane.ERROR_MESSAGE
-//            );
-            int resposta = JOptionPane.showConfirmDialog(
-                    null,
-                    "Jogo cadastrado com sucesso!\nDeseja cadastrar outro jogo?",
-                    "cadastro",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (resposta != 0) {
+
+                Alert mensagemEditar = new Alert(Alert.AlertType.INFORMATION);
+                mensagemEditar.setTitle("Editar Jogo");
+                mensagemEditar.setHeaderText("o jogo foi editado com sucesso");
+            Optional<ButtonType> escolha = mensagemEditar.showAndWait();
                 stage.close();
+
+
             }
 
-        });
 
+        limparCampos();
+        });
+        rodape.getChildren().addAll(btnSalvar, btnApagar);
         return rodape;
+    }
+    private void limparCampos() {
+
+        tfTitulo.clear();
+        tfValor.clear();
+        comboEstudio.setItems(null);
+        comboPlataforma.setItems(null);
+        cbFinalizado.setSelected(false);
+        dpDataLancamento.setValue(LocalDate.now());
+        tfTitulo.requestFocus();
     }
     }
 

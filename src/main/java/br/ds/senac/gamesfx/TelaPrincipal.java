@@ -1,7 +1,9 @@
 package br.ds.senac.gamesfx;
 
+import br.ds.senac.gamesfx.ui.estudio.PainelEstudio;
 import br.ds.senac.gamesfx.ui.home.PainelHome;
 import br.ds.senac.gamesfx.ui.jogos.PainelJogos;
+import br.ds.senac.gamesfx.ui.plataforma.PainelPlataforma;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -57,8 +59,16 @@ public class TelaPrincipal extends Application {
         });
 
         Button btnPlataformas = criarBotaoMenu("Plataformas");
+        btnPlataformas.setOnAction(click ->{
+            PainelPlataforma painelPlataforma = new PainelPlataforma(stage);
+            raiz.setCenter(painelPlataforma.criarPainelPlataforma());
+        });
 
         Button btnEstudios = criarBotaoMenu("Estudios");
+        btnEstudios.setOnAction(click ->{
+            PainelEstudio painelEstudio = new PainelEstudio(stage);
+            raiz.setCenter(painelEstudio.cirarPainelEstudio());
+        });
 
         Button btnHome = criarBotaoMenu("Home");
         aplicarEfeitoHover(btnJogos,btnHome,btnEstudios,btnPlataformas);

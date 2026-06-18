@@ -44,10 +44,13 @@ public class PainelJogos {
         TableView<Jogo> tblJogos = new TableView<>();
 
         tblJogos.setStyle(
-                "-fx-background-color: #696969;"
+
+                "-fx-background-color: #23272A;" +
+                        "-fx-control-inner-background: #23272A;" +
+                        "-fx-table-cell-border-color: transparent;"
         );
 
-        VBox.setVgrow(tblJogos, Priority.ALWAYS);
+                VBox.setVgrow(tblJogos, Priority.ALWAYS);
 
         //estilo da tabela
 
@@ -63,18 +66,22 @@ public class PainelJogos {
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaId.setResizable(false);
         colunaId.setPrefWidth(50);
-        colunaId.setStyle("-fx-text-fill: #000000; -fx-background-color: #696969; -fx-border-color: #444;");
+
 
         TableColumn<Jogo, String> colunaTitulo = new TableColumn<>("TITULO");
         colunaTitulo.setCellValueFactory(new PropertyValueFactory<>("titulo"));
         colunaTitulo.setPrefWidth(400);
-        colunaTitulo.setStyle("-fx-text-fill: #000000; -fx-background-color: #696969; -fx-border-color: #444;");
+
 
 
         TableColumn<Jogo, String> colunaPlataforma = new TableColumn<>("PLATAFORMA");
-        colunaPlataforma.setCellValueFactory(new PropertyValueFactory<>("plataforma"));
+        colunaPlataforma.setCellValueFactory(new PropertyValueFactory<>("Plataforma"));
         colunaPlataforma.setPrefWidth(400);
-        colunaPlataforma.setStyle("-fx-text-fill: #000000; -fx-background-color: #696969; -fx-border-color: #444;");
+
+        TableColumn<Jogo, String> colunaEstudio = new TableColumn<>("Estudios");
+        colunaEstudio.setCellValueFactory(new PropertyValueFactory<>("Estudio"));
+        colunaEstudio.setPrefWidth(400);
+
 
        TableColumn<Jogo, Boolean> colunaPlatinado = new TableColumn<>("PLATINADO");
         colunaPlatinado.setCellValueFactory(new PropertyValueFactory<>("platinado"));
@@ -101,6 +108,7 @@ public class PainelJogos {
            Jogo editarJogo  = tblJogos.getSelectionModel().getSelectedItem();
            TelaJogo telaJogo = new TelaJogo(editarJogo);
            telaJogo.criarTela(stage);
+           tblJogos.setItems(repository.getJogos());
 
 
         });
@@ -112,7 +120,7 @@ public class PainelJogos {
         btnExcluir.setOnAction(e -> {
 
             Alert confirmaExclusão = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmaExclusão.setTitle("titulo do erro");
+            confirmaExclusão.setTitle("Exclusão");
             confirmaExclusão.setHeaderText("Você está excluindo um jogo.");
             confirmaExclusão.setContentText("Deseja continuar?");
 
@@ -137,17 +145,6 @@ public class PainelJogos {
 
 
 
-
-
-//
-//
-//            if (resultado > 0) {
-//
-//                JOptionPane.showMessageDialog(null, "Jogo excluído com sucesso!");
-//                tblJogos.setItems(repository.getJogos());
-//
-//            }
-
         });
 
 
@@ -157,7 +154,7 @@ public class PainelJogos {
 
 
         //adicionar coluna da tabela
-        tblJogos.getColumns().addAll(colunaId, colunaTitulo, colunaPlataforma);
+        tblJogos.getColumns().addAll(colunaId, colunaTitulo, colunaPlataforma,colunaEstudio, colunaPlatinado);
 
 
         painelJogos.getChildren().addAll(lblTitulo, linha, tblJogos, painelBotoes);
